@@ -33,7 +33,7 @@ Create an algorithm that generates a 5 x 3 array that simulates 5 reel slots e.g
     [5, 2, 3, 6, 1]
 ]  
 ```
-A winning line is created when an array has 3 to 5 same prize IDs in succession in the 
+A winning line is created when an array has 3 to 5 same symbol IDs in succession in the 
 predefined payline. 
  ```
  [
@@ -51,7 +51,6 @@ Each symbol should have a configurable points and weight (in the backoffice) for
 User should be allowed to create new symbols and upload 1 image which would represent it.
 As a part of game launch validation, minimum of 6 and maximum of 10 symbols should be present/active in the
 backoffice. Please provide a database seeder for a default configuration.
-If there are 6 symbols 
 At the end of the game the total sum of points should be shown.
 
 When user opens a campaign url, game should be created, taking into account

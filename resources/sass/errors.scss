@@ -1,0 +1,26 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
+html, body {
+    background-color: #fafafa;
+    height: 100%;
+    min-height: 100%;
+}
+
+body {
+    background: url('../errors/background.jpg') no-repeat center center;
+    background-size: cover;
+}
+
+h1 {
+    color: #2c3c84;
+}
+
+p {
+    color: #9499b9;
+}

@@ -1,0 +1,23 @@
+id: 8443
+name: 2right-questions
+environments:
+    production:
+        memory: 1024
+        cli-memory: 512
+        runtime: php-7.4
+        build:
+            - 'composer install --no-dev'
+            - 'php artisan event:cache'
+            - 'npm ci && npm run prod && rm -rf node_modules'
+    staging:
+        database: eu-west-2-staging
+        domain: 2right-questions-demo.thunderbite.cloud
+        mail: false
+        memory: 1024
+        cli-memory: 512
+        runtime: php-7.4
+        build:
+            - 'composer install'
+            - 'php artisan migrate'
+            - 'php artisan event:cache'
+            - 'npm ci && npm run dev && rm -rf node_modules'

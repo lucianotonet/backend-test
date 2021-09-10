@@ -11,28 +11,21 @@ Route::prefix('backstage')->middleware('setActiveCampaign')->group(function () {
     ]);
 
     Route::namespace('Backstage')->name('backstage.')->middleware('auth')->group(function () {
-
         // Campaigns
         Route::get('campaigns/{campaign}/use', 'CampaignsController@use')->name('campaigns.use');
         Route::resource('campaigns', 'CampaignsController');
-
 
         // Dashboard
         Route::resource('/', 'DashboardController');
         Route::resource('dashboard', 'DashboardController');
 
-
         // Users
         Route::resource('users', 'UsersController');
 
-
         Route::group(['middleware' => ['redirectIfNoActiveCampaign']], function () {
-
             Route::resource('prizes', 'PrizesController');
             Route::resource('games', 'GamesController');
-
         });
-
     });
 });
 

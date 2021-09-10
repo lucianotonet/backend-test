@@ -13,7 +13,7 @@ a Thunderbite member
 1. Seed the database with faker data `php artisan db:seed --class='GamesTableSeeder'`
 1. Run `npm install`
 1. Run `npm run dev`
-1. Visit http://thunderbite-test.test/backstage and happy coding
+1. Visit http://slots-test.test/backstage and happy coding
 
 Login details: test@thunderbite.com / test123
 

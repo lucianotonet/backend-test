@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Game extends Model
 {
-    protected $fillable = ['campaign_id', 'prize_id', 'account','revealed_at'];
+    protected $fillable = ['campaign_id', 'prize_id', 'account', 'revealed_at'];
 
     protected $dates = [
         'revealed_at',
@@ -23,6 +23,7 @@ class Game extends Model
         if ($data = request('filter1')) {
             $query->where('account', 'like', $data.'%');
         }
+
         if ($data = request('filter2')) {
             $query->where('prizeId', $data);
         }
@@ -30,6 +31,7 @@ class Game extends Model
         if ($data = request('filter3')) {
             $query->whereRaw('HOUR(revealed_at) >= '.$data);
         }
+
         if ($data = request('filter4')) {
             $query->whereRaw('HOUR(revealed_at) <= '.$data);
         }

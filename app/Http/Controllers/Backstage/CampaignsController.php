@@ -2,21 +2,13 @@
 
 namespace App\Http\Controllers\Backstage;
 
-use Carbon\Carbon;
-use App\Models\Campaign;
-use Carbon\CarbonPeriod;
-use App\Http\Requests\Backstage\Campaigns\StoreRequest;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Backstage\Campaigns\UpdateRequest;
+use App\Models\Campaign;
+use Carbon\Carbon;
 
-class CampaignsController extends BackstageController
+class CampaignsController extends Controller
 {
-
-
-    public function __construct()
-    {
-        $this->authorizeResource(Campaign::class, 'campaign');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -46,24 +38,24 @@ class CampaignsController extends BackstageController
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-         // Validation
-         $data = $this->validate(request(), [
+        // Validation
+        $data = $this->validate(request(), [
             'name' => 'required|unique:campaigns|max:255',
             'timezone' => 'required',
-            'start_date' => 'required|date_format:Y-m-d H:i:s',
-            'end_date' => 'required|date_format:Y-m-d H:i:s',
+            'starts_at' => 'required|date_format:d-m-Y H:i:s',
+            'ends_at' => 'required|date_format:d-m-Y H:i:s',
         ]);
 
         //parse dates from campaign's timezone
-        $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $data['start_date'], $data['timezone'])
+        $startDate = Carbon::createFromFormat('d-m-Y H:i:s', $data['starts_at'], $data['timezone'])
             ->setTimezone('UTC');
-        $data['start_date'] = $startDate;
+        $data['starts_at'] = $startDate;
 
-        $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $data['end_date'], $data['timezone'])
+        $startDate = Carbon::createFromFormat('d-m-Y H:i:s', $data['ends_at'], $data['timezone'])
             ->setTimezone('UTC');
-        $data['end_date'] = $startDate;
+        $data['ends_at'] = $startDate;
 
         // Create the campaign
         $campaign = Campaign::create($data);
@@ -111,16 +103,16 @@ class CampaignsController extends BackstageController
         $data = $this->validate(request(), [
             'name' => 'required|max:255|unique:campaigns,name,'.$campaign->id,
             'timezone' => 'required',
-            'start_date' => 'required|date_format:Y-m-d H:i:s',
-            'end_date' => 'required|date_format:Y-m-d H:i:s',
+            'starts_at' => 'required|date_format:d-m-Y H:i:s',
+            'ends_at' => 'required|date_format:d-m-Y H:i:s',
         ]);
 
         //parse dates from campaign's timezone
-        $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $data['start_date'], $data['timezone'])->setTimezone('UTC');
-        $data['start_date'] = $startDate;
+        $startDate = Carbon::createFromFormat('d-m-Y H:i:s', $data['starts_at'], $data['timezone'])->setTimezone('UTC');
+        $data['starts_at'] = $startDate;
 
-        $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $data['end_date'], $data['timezone'])->setTimezone('UTC');
-        $data['end_date'] = $startDate;
+        $startDate = Carbon::createFromFormat('d-m-Y H:i:s', $data['ends_at'], $data['timezone'])->setTimezone('UTC');
+        $data['ends_at'] = $startDate;
 
         // Update the campaigns data
         $campaign->update($data);
@@ -128,7 +120,7 @@ class CampaignsController extends BackstageController
         // Redirect
         session()->flash('success', 'The campaign details have been saved!');
 
-        return redirect()->route('campaigns.edit', $campaign->id);
+        return redirect()->route('backstage.campaigns.edit', $campaign->id);
     }
 
     /**

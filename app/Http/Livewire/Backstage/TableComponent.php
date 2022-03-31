@@ -1,8 +1,7 @@
 <?php
 
-    namespace App\Http\Livewire\Backstage;
+namespace App\Http\Livewire\Backstage;
 
-    use App\Models\User;
     use Livewire\Component;
     use Livewire\WithPagination;
 

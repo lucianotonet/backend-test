@@ -6,7 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Prize extends Model
 {
-    protected $fillable = ['campaign_id', 'customer_segmentation_id', 'customerlevel_id', 'used', 'section',  'redirect_desktop', 'redirect_mobile', 'win_popup_image', 'nowin_popup_image'];
+    protected $fillable = [
+        'campaign_id',
+        'name',
+        'description',
+        'level',
+        'weight',
+        'starts_at',
+        'ends_at',
+    ];
+
+    protected $dates = ['created_at', 'updated_at', 'starts_at', 'ends_at'];
 
     public static function search($query)
     {
@@ -23,5 +33,4 @@ class Prize extends Model
     {
         return $this->hasMany(PrizeTable::class, 'prize_id');
     }
-
 }

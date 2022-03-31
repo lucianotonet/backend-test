@@ -2,11 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Campaign;
 use Closure;
 use Illuminate\Support\Facades\View;
 
-class RedirectIfNoActiveCampaign
+class redirectIfNoActiveCampaign
 {
     /**
      * Handle an incoming request.
@@ -22,6 +21,5 @@ class RedirectIfNoActiveCampaign
         }
 
         return $next($request);
-
     }
 }

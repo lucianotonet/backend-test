@@ -10,10 +10,10 @@ class AuthServiceProvider extends ServiceProvider
     /**
      * The policy mappings for the application.
      *
-     * @var array
+     * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Model' => 'App\Policies\ModelPolicy',
+        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
     ];
 
     /**
@@ -25,15 +25,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::guessPolicyNamesUsing(function ($modelClass) {
-            return 'App\\Policies\\'.class_basename($modelClass).'Policy';
-        });
-
-        // When a user has full access, authorize all actions.
-        Gate::before(function ($user) {
-            if ($user->isAdmin()) {
-                return true;
-            }
-        });
+        //
     }
 }

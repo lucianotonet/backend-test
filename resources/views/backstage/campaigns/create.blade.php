@@ -1,4 +1,4 @@
-@extends('templates.backstage')
+@extends('backstage.templates.backstage')
 
 @section('tools')
     <a href="{{ route('backstage.campaigns.index') }}" class="button-default">Campaigns</a>

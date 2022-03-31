@@ -1,9 +1,9 @@
 @csrf
 
 @include('backstage.partials.forms.text', [
-    'field' => 'title',
-    'label' => 'Title',
-    'value' => old('title') ?? $prize->title,
+    'field' => 'name',
+    'label' => 'Name',
+    'value' => old('name') ?? $prize->name,
 ])
 
 @include('backstage.partials.forms.text', [
@@ -19,6 +19,12 @@
     'value' => old('weight') ?? $prize->weight,
 ])
 
+@include('backstage.partials.forms.select', [
+    'field' => 'level',
+    'label' => 'Level',
+    'value' => old('level') ?? $prize->level,
+    'options' => ['low' => 'Low', 'med' => 'Medium', 'high' => 'High'],
+])
 
 @include('backstage.partials.forms.starts-ends', [
     'starts_at' => old('starts_at') ?? ($prize->starts_at === null ? $prize->starts_at : $prize->starts_at->format('d-m-Y H:i:s')),

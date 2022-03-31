@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Backstage;
 
-    use App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 
-    class DashboardController extends Controller
+class DashboardController extends Controller
+{
+    public function index()
     {
-        public function index()
-        {
-            return view('backstage.dashboard.index');
-        }
+        return view('backstage.dashboard.index');
     }
+}

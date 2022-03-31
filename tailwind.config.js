@@ -1,7 +1,12 @@
 module.exports = {
-    theme: {
-        extend: {
-            backgroundColor: {
+	content: [
+		"./resources/**/*.blade.php",
+		"./resources/**/*.js",
+		"./resources/**/*.vue",
+	],
+	theme: {
+		extend: {
+			backgroundColor: {
                 'primary': '#fafafa',
                 'form': '#fbfbfd',
                 'toggle-success': '#02e284',
@@ -9,10 +14,7 @@ module.exports = {
             borderColor: {
                 'form': '#e7e8f1',
             },
-        },
-    },
-    variants: {},
-    plugins: [
-        require('@tailwindcss/ui'),
-    ],
+		},
+	},
+	plugins: [],
 }

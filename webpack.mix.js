@@ -1,29 +1,23 @@
 const mix = require('laravel-mix');
-const tailwindcss = require('tailwindcss');
 
-// Backstage
-mix.js('resources/js/backstage.js', 'public/js')
-    .sass('resources/sass/backstage.scss', 'public/css')
-    .options({
-        processCssUrls: false,
-        postCss: [ tailwindcss('./tailwind.config.js') ],
-    })
-    .copy('node_modules/@fortawesome/fontawesome-free/webfonts', 'public/webfonts')
-    .version();
+/*
+ |--------------------------------------------------------------------------
+ | Mix Asset Management
+ |--------------------------------------------------------------------------
+ |
+ | Mix provides a clean, fluent API for defining some Webpack build steps
+ | for your Laravel applications. By default, we are compiling the CSS
+ | file for the application as well as bundling up all the JS files.
+ |
+ */
 
-// Frontend
-mix.js('resources/js/frontend.js', 'public/js')
-    .sass('resources/sass/frontend.scss', 'public/css')
-    .options({
-        processCssUrls: false,
-        postCss: [ tailwindcss('./tailwind.config.js') ],
-    })
-    .version();
+mix.js('resources/js/app.js', 'public/js')
+    .postCss('resources/css/app.css', 'public/css', [
+        //
+    ]);
 
-// Errors
-mix.sass('resources/sass/errors.scss', 'public/css')
-    .options({
-        processCssUrls: false,
-        postCss: [ tailwindcss('./tailwind.config.js') ],
-    })
-    .version();
+
+mix.js("resources/js/backstage.js", "public/js")
+    .postCss("resources/css/backstage.css", "public/css", [
+        require("tailwindcss"),
+    ]);

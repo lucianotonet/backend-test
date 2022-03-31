@@ -8,15 +8,11 @@ class FrontendController extends Controller
 {
     public function loadCampaign(Campaign $campaign)
     {
-        $game = null;
-
-        return view('frontend.index')
-            ->with('data', $game);
+        return view('frontend.index');
     }
 
     public function placeholder()
     {
         return view('frontend.placeholder');
     }
-
 }

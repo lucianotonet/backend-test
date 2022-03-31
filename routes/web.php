@@ -1,33 +1,36 @@
 <?php
 
-Route::prefix('backstage')->middleware('setActiveCampaign')->group(function () {
-    // Account activation
-    Route::get('activate/{ott}', 'Auth\ActivateAccountController@index')->name('backstage.activate.show');
-    Route::put('activate/{ott}', 'Auth\ActivateAccountController@update')->name('backstage.activate.update');
+use App\Http\Controllers\Backstage\CampaignsController;
+use App\Http\Controllers\Backstage\DashboardController;
+use App\Http\Controllers\Backstage\GameController;
+use App\Http\Controllers\Backstage\PrizeController;
+use App\Http\Controllers\Backstage\UserController;
+use App\Http\Controllers\FrontendController;
+use Illuminate\Support\Facades\Route;
 
-    // Authentication
-    Auth::routes([
-        'register' => false,
-    ]);
+Route::prefix('backstage')->name('backstage.')->middleware(['auth', 'setActiveCampaign'])->group(function () {
 
-    Route::namespace('Backstage')->name('backstage.')->middleware('auth')->group(function () {
-        // Campaigns
-        Route::get('campaigns/{campaign}/use', 'CampaignsController@use')->name('campaigns.use');
-        Route::resource('campaigns', 'CampaignsController');
+    // Dashboard
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-        // Dashboard
-        Route::resource('/', 'DashboardController');
-        Route::resource('dashboard', 'DashboardController');
+    // Campaigns
+    Route::get('campaigns/{campaign}/use', [CampaignsController::class, 'use'])->name('campaigns.use');
+    Route::resource('campaigns', CampaignsController::class);
 
-        // Users
-        Route::resource('users', 'UsersController');
-
-        Route::group(['middleware' => ['redirectIfNoActiveCampaign']], function () {
-            Route::resource('prizes', 'PrizesController');
-            Route::resource('games', 'GamesController');
-        });
+    Route::group(['middleware' => ['redirectIfNoActiveCampaign']], function () {
+        Route::resource('games', GameController::class);
+        Route::resource('prizes', PrizeController::class);
     });
+
+    // Users
+    Route::resource('users', UserController::class);
 });
 
-Route::get('{campaign:slug}', 'FrontendController@loadCampaign');
-Route::get('/', 'FrontendController@placeholder');
+// Route::prefix('backstage')->middleware('setActiveCampaign')->group(function () {
+//     // Account activation
+//     Route::get('activate/{ott}', 'Auth\ActivateAccountController@index')->name('backstage.activate.show');
+//     Route::put('activate/{ott}', 'Auth\ActivateAccountController@update')->name('backstage.activate.update');
+// });
+
+Route::get('{campaign:slug}', [FrontendController::class, 'loadCampaign']);
+Route::get('/', [FrontendController::class, 'placeholder']);

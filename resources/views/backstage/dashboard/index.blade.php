@@ -1,4 +1,4 @@
-@extends('templates.backstage')
+@extends('backstage.templates.backstage')
 
 @section('content')
     <div id="card" class="bg-white shadow-lg mx-auto rounded-b-lg">

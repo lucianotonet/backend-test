@@ -12,6 +12,10 @@ class Game extends Model
 
     protected $fillable = ['campaign_id', 'prize_id', 'account', 'revealed_at', 'spins_limit'];
 
+    protected $casts = [
+        'spin_history' => 'array',
+    ];
+
     protected $dates = [
         'revealed_at',
     ];

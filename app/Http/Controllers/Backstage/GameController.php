@@ -117,21 +117,122 @@ class GameController extends Controller
         $game->save();
 
         // get all symbols ids
-        $symbols = Symbol::all()->pluck('id')->toArray();
+        $symbols = Symbol::all();
+        $symbolIds = $symbols->pluck('id')->toArray();
 
-        $symbolIds = [];
+        $randomSymbolIds = [];
+        $randomSymbols = [];
 
         // get 15 random items from symbols
         for ($i = 0; $i < 15; $i++) {
-            $symbolIds[] = $symbols[array_rand($symbols, 1)];
+            $randomSymbolIds[] = $symbolIds[array_rand($symbolIds, 1)];
+            $randomSymbols[] = $symbols->where('id', $randomSymbolIds[$i])->first();
         }
 
+        // check for matches        
+        $resultMatches = $this->checkMatches($randomSymbolIds);
+
+        // get the best match
+        $maxPoints = 0;
+        $bestMatch = null;
+        foreach ($resultMatches as $match) {
+            if (isset($match['match_times']) && $match['match_times'] > $maxPoints) {
+                $maxPoints = $match['points'];
+                $bestMatch = $match;
+            }
+        }
+        
         $return = [
-            'symbols'       => array_chunk($symbolIds, 5), // splitted 5x3 array 
-            'points'        => 0,
-            'spins_remain'  => $game->spins_limit
+            'symbol_ids'    => array_chunk($randomSymbolIds, 5), // splitted 5x3 array 
+            'points'        => $bestMatch['points'] ?? 0,
+            'spins_remain'  => $game->spins_limit,
+            'matches'       => $resultMatches,
+            'best_match'    => $bestMatch,
+            'symbols'       => array_chunk($randomSymbols, 5), // splitted 5x3 array
         ];
 
+        // save spins history
+        $game->spins_history = json_encode($return);
+        $game->save();
+
         return $return;
+    }
+
+    private function checkMatches($line)
+    {
+        // all possible payline indexes
+        $paylineIndexes = [
+            [1, 2, 3, 4, 5],
+            [6, 7, 8, 9, 10],
+            [11, 12, 13, 14, 15],
+            [1, 7, 13, 9, 5],
+            [11, 7, 3, 9, 15],
+            [6, 2, 3, 4, 10],
+            [6, 12, 13, 14, 10],
+            [1, 2, 8, 14, 15],
+            [11, 12, 8, 4, 5],
+        ];
+
+        $ids = [];
+
+        foreach ($paylineIndexes as $i => $payline) {
+            foreach ($payline as $lineIndex) {
+                $ids[$i][] = $line[$lineIndex - 1];
+            }
+        }
+
+        // count matches
+        $matchesCount = [];
+        $lastId = null;
+
+        foreach ($ids as $lineIndex => $lineValues) {
+            $matchesCount[] = [];
+
+            foreach ($lineValues as $row => $id) {
+                $matchesCount[$lineIndex][$row] = 1;
+                if ($id == $lastId) {
+                    $matchesCount[$lineIndex][$row] = $matchesCount[$lineIndex][$row - 1] + 1;
+                }
+                $lastId = $id;
+            }
+
+            $lastId = null;
+        }
+
+        // get winning symbols
+        $winningSymbols = [];
+        foreach ($matchesCount as $i => $matches) {
+            $winningSymbols[] = null;
+            if (in_array(5, $matches)) {
+                $symbol_id = $ids[$i][array_search(5, $matches)];
+                $symbol = Symbol::find($symbol_id);
+                $winningSymbols[$i] = [
+                    'symbol' => $symbol,
+                    'match_times' => 5,
+                    'payline' => $paylineIndexes[$i],
+                    'points' => $symbol->x5_points
+                ];
+            } else if (in_array(4, $matches)) {
+                $symbol_id = $ids[$i][array_search(4, $matches)];
+                $symbol = Symbol::find($symbol_id);
+                $winningSymbols[$i] = [
+                    'symbol' => $symbol,
+                    'match_times' => 4,
+                    'payline' => $paylineIndexes[$i],
+                    'points' => $symbol->x4_points
+                ];
+            } else if (in_array(3, $matches)) {
+                $symbol_id = $ids[$i][array_search(3, $matches)];
+                $symbol = Symbol::find($symbol_id);
+                $winningSymbols[$i] = [
+                    'symbol' => $symbol,
+                    'match_times' => 3,
+                    'payline' => $paylineIndexes[$i],
+                    'points' => $symbol->x3_points
+                ];
+            }
+        }
+
+        return $winningSymbols;
     }
 }

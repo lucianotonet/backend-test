@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::table('games', function (Blueprint $table) {
             $table->integer('spins_limit')->after('revealed_at')->default(0);
+            $table->json('spins_history')->after('spins_limit')->nullable();
         });
     }
 
@@ -27,6 +28,7 @@ return new class extends Migration
     {
         Schema::table('games', function (Blueprint $table) {
             $table->dropColumn('spins_limit');
+            $table->dropColumn('spins_history');
         });
     }
 };

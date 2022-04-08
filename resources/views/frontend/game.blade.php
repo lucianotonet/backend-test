@@ -63,7 +63,7 @@
                             });
                             return
                         }
-                        resultsDiv.innerHTML = JSON.stringify(response.data.symbols);
+                        resultsDiv.innerHTML = JSON.stringify(response.data.symbol_ids);
                         points.innerHTML = JSON.stringify(response.data.points);
                         remainSpins.innerHTML = JSON.stringify(response.data.spins_remain);
                     })

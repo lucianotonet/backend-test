@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Backstage;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backstage\Campaigns\UpdateRequest;
 use App\Models\Campaign;
+use App\Models\Game;
 use App\Models\Symbol;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class GameController extends Controller
@@ -95,18 +97,41 @@ class GameController extends Controller
     // return a 5x3 array with random symbols
     public function spin(Campaign $campaign)
     {
+        $game = Game::whereDate('created_at', '=', Carbon::today()->setTimezone($campaign->timezone)->toDateString())
+            ->where([
+                'account' => request('a'),
+                'campaign_id' => $campaign->id
+            ])
+            ->first();
+
+        // check spins limit
+        if ($game->spins_limit == 0) {
+            return response()->json([
+                'error' => "You don't have more spins today. Please come back tomorrow and try again."
+            ]);
+        }
+
+        // Update spins 
+        $game->spins_limit = $game->spins_limit - 1;
+        $game->revealed_at = Carbon::today()->setTimezone($campaign->timezone)->now();
+        $game->save();
+
         // get all symbols ids
         $symbols = Symbol::all()->pluck('id')->toArray();
 
-        $return = [];
+        $symbolIds = [];
 
         // get 15 random items from symbols
         for ($i = 0; $i < 15; $i++) {
-            $return[] = $symbols[array_rand($symbols, 1)];
+            $symbolIds[] = $symbols[array_rand($symbols, 1)];
         }
 
-        // return splitted array 
-        return array_chunk($return, 5);
-    }
+        $return = [
+            'symbols'       => array_chunk($symbolIds, 5), // splitted 5x3 array 
+            'points'        => 0,
+            'spins_remain'  => $game->spins_limit
+        ];
 
+        return $return;
+    }
 }

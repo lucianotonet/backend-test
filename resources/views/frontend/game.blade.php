@@ -22,7 +22,19 @@
     <div class="container mx-auto p-10 relative z-10 flex flex-col items-center justify-center h-full">
 
         {{-- Just for the test --}}
-        <pre id="results"></pre>
+        <div id="results" class="bg-slate-100 p-8">You have {{ $game->spins_limit }} spins today.@if ($game->spins_limit)
+                <br />Press button to start the game.
+            @endIf
+        </div>
+
+        <div class="flex justify-around w-96 py-8 my-5">
+            <div>
+                Points: <span id="points">0</span>
+            </div>
+            <div>
+                Remain spins: <span id="remainSpins">{{ $game->spins_limit }}</span>
+            </div>
+        </div>
 
         <button class="button">Spin</button>
     </div>
@@ -37,10 +49,23 @@
         window.addEventListener('load', function() {
             const spinButton = document.querySelector('button');
             const resultsDiv = document.getElementById('results');
+            const remainSpins = document.getElementById('remainSpins');
+            const points = document.getElementById('points');
             spinButton.addEventListener('click', function() {
-                axios.get("{{ url('/api/' . $campaign->slug) }}")
+                axios.get("{{ url('/api/' . $campaign->slug . '?a=username') }}")
                     .then(function(response) {
-                        resultsDiv.innerHTML = JSON.stringify(response.data);
+                        if (response.data.error) {
+                            swal({
+                                title: "Oops!",
+                                text: response.data.error,
+                                icon: "warning",
+                                buttons: true,
+                            });
+                            return
+                        }
+                        resultsDiv.innerHTML = JSON.stringify(response.data.symbols);
+                        points.innerHTML = JSON.stringify(response.data.points);
+                        remainSpins.innerHTML = JSON.stringify(response.data.spins_remain);
                     })
             });
         });

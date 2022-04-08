@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Campaign;
+use App\Models\Symbol;
 use Closure;
 
 class SetActiveCampaign
@@ -23,6 +24,11 @@ class SetActiveCampaign
 
             if ($activeCampaign === null) {
                 session()->forget('activeCampaign');
+            }
+
+            if (Symbol::count() < 6) {
+                session()->forget('activeCampaign');
+                session()->flash('warning', 'There are not enough symbols to start a campaign. Please add more symbols.');
             }
         }
 

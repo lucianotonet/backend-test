@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backstage;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backstage\Campaigns\UpdateRequest;
 use App\Models\Campaign;
+use App\Models\Symbol;
 use Carbon\Carbon;
 
 class CampaignsController extends Controller
@@ -144,7 +145,12 @@ class CampaignsController extends Controller
 
     public function use(Campaign $campaign)
     {
-        session()->put('activeCampaign', $campaign->id);
+        // check if exist at least 6 Symbol
+        if (Symbol::count() < 6) {
+            session()->flash('warning', 'The campaign has not been activated. Please add at least 6 symbols.');
+        } else {
+            session()->put('activeCampaign', $campaign->id);
+        }
 
         return redirect()->route('backstage.campaigns.index');
     }

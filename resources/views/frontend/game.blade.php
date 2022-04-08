@@ -46,6 +46,8 @@
         });
     </script>
 
+    @include('backstage.partials.flash-messages')
+
 </body>
 
 </html>

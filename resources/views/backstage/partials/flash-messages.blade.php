@@ -10,4 +10,22 @@
         });
     @endif
 
+    @if( Session::has('error') )
+        swal({
+            title: "Oops!",
+            text: "{{ Session::get('error') }}",            
+            button: true,
+            icon: 'error'
+        });
+    @endif
+
+    @if( Session::has('warning') )
+        swal({
+            title: "Warning!",
+            text: "{{ Session::get('warning') }}",            
+            button: true,
+            icon: 'warning'
+        });
+    @endif
+
 </script>

@@ -28,7 +28,8 @@ class Game extends Model
         'revealed_at',
         'spins_limit',
         'spins_count',
-        'total_points'
+        'total_points',
+        'spin_history'
     ];
 
     protected $casts = [

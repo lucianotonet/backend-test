@@ -248,4 +248,46 @@ class GameController extends Controller
 
         return array_filter($winningSymbols);
     }
+
+    // Export filtered games to CSV
+    public function export()
+    {
+        $games = Game::filter()->get();
+
+        $fileName = 'games.csv';
+
+        $columns = [
+            'ID',
+            'Campaign ID',
+            'Prize ID',
+            'Username',
+            'Revealed at',
+            'Total spins',
+            'Total points',
+            // 'Spins history'
+        ];
+
+        $callback = function () use ($games, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($games as $game) {
+
+                $row['ID'] = $game->id;
+                $row['Campaign ID'] = $game->campaign_id;
+                $row['Prize ID'] = $game->prize_id;
+                $row['Username'] = $game->account;
+                $row['Revealed at'] = $game->revealed_at;
+                $row['Total spins'] = $game->spins_count;
+                $row['Total points'] = $game->total_points;
+                // $row['Spins history'] = $game->spin_history;
+
+                fputcsv($file, $row);
+            }
+
+            fclose($file);
+        };
+
+        return response()->streamDownload($callback, $fileName);
+    }
 }

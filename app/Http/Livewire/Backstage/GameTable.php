@@ -27,12 +27,21 @@ class GameTable extends TableComponent
                 'attribute' => 'title',
                 'sort' => true,
             ],
-
             [
                 'title' => 'revealed at',
                 'attribute' => 'revealed_at',
                 'sort' => true,
             ],
+            [
+                'title' => 'Awarded points',
+                'attribute' => 'total_points',
+                'sort' => false,
+            ],
+            // [
+            //     'title' => 'Spins history',
+            //     'array' => 'spins_history',
+            //     'sort' => false,
+            // ]
         ];
 
         return view('livewire.backstage.table', [

@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         // Thunderbite Middleware
         'setActiveCampaign' => \App\Http\Middleware\SetActiveCampaign::class,
         'redirectIfNoActiveCampaign' => \App\Http\Middleware\RedirectIfNoActiveCampaign::class,
+        'redirectIfNotEnoughSymbols' => \App\Http\Middleware\RedirectIfNotEnoughSymbols::class,
     ];
 }

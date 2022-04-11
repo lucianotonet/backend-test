@@ -1,9 +1,15 @@
 @extends('backstage.templates.backstage')
 
 @section('tools')
-    {{-- @if( auth()->user()->hasLevel('admin') || auth()->user()->hasLevel('download') )
+    @if( auth()->user()->hasLevel('admin') || auth()->user()->hasLevel('download') )
         <form method="POST" action="{{ route('backstage.games.export') }}">
             @csrf
+
+            <!-- Apends get parameters as fields -->
+            @foreach( request()->query() as $key => $value )
+                <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+            @endforeach
+
             <div class="grid grid-cols-4 gap-4 items-start pt-5">
                 <div class="col-start-2 col-span-3">
                     <button type="submit" class="submit-button">
@@ -12,7 +18,7 @@
                 </div>
             </div>
         </form>
-    @endif --}}
+    @endif
 @endsection
 
 @section('content')

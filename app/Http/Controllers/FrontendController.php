@@ -10,7 +10,7 @@ class FrontendController extends Controller
 {
     public function loadCampaign(Campaign $campaign)
     {
-        $game = Game::whereDate('created_at', '=', Carbon::today()->setTimezone($campaign->timezone)->toDateString())
+        $game = Game::whereDate('created_at', '=', Carbon::today()->setTimezone($campaign->timezone)->toDateString())            
             ->updateOrCreate([
                 'account' => request('a'),
                 'campaign_id' => $campaign->id
@@ -19,8 +19,10 @@ class FrontendController extends Controller
             ]);
 
         // Just for simplicity
+        // It reset the counter to 0
         if (request('spins')) {
             $game->spins_limit = request('spins');
+            $game->spins_count = 0;
             $game->save();
         }
 

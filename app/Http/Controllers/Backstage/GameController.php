@@ -105,16 +105,16 @@ class GameController extends Controller
             ->first();
 
         // check spins limit
-        if ($game->spins_limit == 0) {
+        if ($game->spins_count == $game->spins_limit) {
             return response()->json([
                 'error' => "You don't have more spins today. Please come back tomorrow and try again."
             ]);
         }
 
         // Update spins 
-        $game->spins_limit = $game->spins_limit - 1;
+        $game->spins_count = $game->spins_count + 1;
         $game->revealed_at = Carbon::today()->setTimezone($campaign->timezone)->now();
-        $game->save();
+        // $game->save();
 
         // get all symbols ids
         $symbols = Symbol::all();
@@ -134,28 +134,41 @@ class GameController extends Controller
 
         // get the best match
         $maxPoints = 0;
-        $bestMatch = null;
+        $bestMatch = [];
         foreach ($resultMatches as $match) {
             if (isset($match['match_times']) && $match['match_times'] > $maxPoints) {
                 $maxPoints = $match['points'];
                 $bestMatch = $match;
             }
         }
-        
-        $return = [
+
+        // prepare response
+        $total_points = $game->total_points + ($bestMatch['points'] ?? 0);
+        $response = [
             'symbol_ids'    => array_chunk($randomSymbolIds, 5), // splitted 5x3 array 
-            'points'        => $bestMatch['points'] ?? 0,
-            'spins_remain'  => $game->spins_limit,
-            'matches'       => $resultMatches,
+            'symbol_objs'   => array_chunk($randomSymbols, 5), // splitted 5x3 array
+            'points'        => floatval($bestMatch['points'] ?? 0),
+            'total_points'  => $total_points,
+            'spins_remain'  => $game->spins_limit - $game->spins_count,
+            'all_matches'   => $resultMatches,
             'best_match'    => $bestMatch,
-            'symbols'       => array_chunk($randomSymbols, 5), // splitted 5x3 array
         ];
 
         // save spins history
-        $game->spins_history = json_encode($return);
+        $spins_history = json_decode($game->spins_history);
+        $spins_history[] = array_merge(
+            $response,
+            [
+                'date' => Carbon::now()->setTimezone($campaign->timezone)->toDateTimeString(), // just for history log
+            ]
+        );
+
+        $game->spins_history = $spins_history;
+        $game->total_points = $total_points;
         $game->save();
 
-        return $return;
+        // return response
+        return $response;
     }
 
     private function checkMatches($line)
@@ -207,7 +220,7 @@ class GameController extends Controller
                 $symbol_id = $ids[$i][array_search(5, $matches)];
                 $symbol = Symbol::find($symbol_id);
                 $winningSymbols[$i] = [
-                    'symbol' => $symbol,
+                    'match_symbol' => $symbol,
                     'match_times' => 5,
                     'payline' => $paylineIndexes[$i],
                     'points' => $symbol->x5_points
@@ -216,7 +229,7 @@ class GameController extends Controller
                 $symbol_id = $ids[$i][array_search(4, $matches)];
                 $symbol = Symbol::find($symbol_id);
                 $winningSymbols[$i] = [
-                    'symbol' => $symbol,
+                    'match_symbol' => $symbol,
                     'match_times' => 4,
                     'payline' => $paylineIndexes[$i],
                     'points' => $symbol->x4_points
@@ -225,7 +238,7 @@ class GameController extends Controller
                 $symbol_id = $ids[$i][array_search(3, $matches)];
                 $symbol = Symbol::find($symbol_id);
                 $winningSymbols[$i] = [
-                    'symbol' => $symbol,
+                    'match_symbol' => $symbol,
                     'match_times' => 3,
                     'payline' => $paylineIndexes[$i],
                     'points' => $symbol->x3_points
@@ -233,6 +246,6 @@ class GameController extends Controller
             }
         }
 
-        return $winningSymbols;
+        return array_filter($winningSymbols);
     }
 }

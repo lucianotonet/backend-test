@@ -21,72 +21,44 @@ class SymbolSeeder extends Seeder
         Symbol::create([
             'name' => 'Apple',
             'image' => 'apple.png',
-            'x3_points' => 1.00,
-            'x4_points' => 2.00,
-            'x5_points' => 5.00,
+            'x3_points' => 1.50,
+            'x4_points' => 3.00,
+            'x5_points' => 6.00,
         ]);
         Symbol::create([
             'name' => 'Banana',
             'image' => 'banana.png',
-            'x3_points' => 1.00,
-            'x4_points' => 2.00,
-            'x5_points' => 5.00,
+            'x3_points' => 1.50,
+            'x4_points' => 3.00,
+            'x5_points' => 6.00,
         ]);
         Symbol::create([
             'name' => 'Cherry',
             'image' => 'cherry.png',
-            'x3_points' => 1.00,
-            'x4_points' => 2.00,
-            'x5_points' => 5.00,
+            'x3_points' => 1.50,
+            'x4_points' => 3.00,
+            'x5_points' => 6.00,
         ]);
         Symbol::create([
-            'name' => 'Grapes',
-            'image' => 'grapes.png',
-            'x3_points' => 1.00,
-            'x4_points' => 2.00,
-            'x5_points' => 5.00,
+            'name' => 'Grapes','image' => 'grapes.png'            
         ]);
         Symbol::create([
-            'name' => 'Lemon',
-            'image' => 'lemon.png',
-            'x3_points' => 1.00,
-            'x4_points' => 2.00,
-            'x5_points' => 5.00,
+            'name' => 'Lemon','image' => 'lemon.png'            
         ]);
         Symbol::create([
-            'name' => 'Orange',
-            'image' => 'orange.png',
-            'x3_points' => 1.00,
-            'x4_points' => 2.00,
-            'x5_points' => 5.00,
+            'name' => 'Orange','image' => 'orange.png'            
         ]);
         Symbol::create([
-            'name' => 'Peach',
-            'image' => 'peach.png',
-            'x3_points' => 1.00,
-            'x4_points' => 2.00,
-            'x5_points' => 5.00,
+            'name' => 'Peach','image' => 'peach.png'            
         ]);
         Symbol::create([
-            'name' => 'Pear',
-            'image' => 'pear.png',
-            'x3_points' => 1.00,
-            'x4_points' => 2.00,
-            'x5_points' => 5.00,
+            'name' => 'Pear','image' => 'pear.png'            
         ]);
         Symbol::create([
-            'name' => 'Strawberry',
-            'image' => 'strawberry.png',
-            'x3_points' => 1.00,
-            'x4_points' => 2.00,
-            'x5_points' => 5.00,
+            'name' => 'Strawberry','image' => 'strawberry.png'            
         ]);
         Symbol::create([
-            'name' => 'Watermelon',
-            'image' => 'watermelon.png',
-            'x3_points' => 1.00,
-            'x4_points' => 2.00,
-            'x5_points' => 5.00,
+            'name' => 'Watermelon','image' => 'watermelon.png'            
         ]);
 
         // Copy fruit images from resources/images/symbols to storage/app/public/symbols

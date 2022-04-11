@@ -10,7 +10,25 @@ class Game extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['campaign_id', 'prize_id', 'account', 'revealed_at', 'spins_limit'];
+    protected $fillable = [
+        'campaign_id',
+        'prize_id',
+        'account',
+        'revealed_at',
+        'spins_limit',
+        'spins_count',
+        'total_points'
+    ];
+    protected $visible = [
+        'id',
+        'campaign_id',
+        'prize_id',
+        'account',
+        'revealed_at',
+        'spins_limit',
+        'spins_count',
+        'total_points'
+    ];
 
     protected $casts = [
         'spin_history' => 'array',
@@ -28,7 +46,7 @@ class Game extends Model
         self::filterDates($query, $campaign);
 
         if ($data = request('filter1')) {
-            $query->where('account', 'like', $data.'%');
+            $query->where('account', 'like', $data . '%');
         }
 
         if ($data = request('filter2')) {
@@ -36,11 +54,11 @@ class Game extends Model
         }
 
         if ($data = request('filter3')) {
-            $query->whereRaw('HOUR(revealed_at) >= '.$data);
+            $query->whereRaw('HOUR(revealed_at) >= ' . $data);
         }
 
         if ($data = request('filter4')) {
-            $query->whereRaw('HOUR(revealed_at) <= '.$data);
+            $query->whereRaw('HOUR(revealed_at) <= ' . $data);
         }
 
         $query->leftJoin('prizes', 'prizes.id', '=', 'games.prize_id')
